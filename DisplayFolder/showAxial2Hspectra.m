@@ -1,5 +1,17 @@
 function showAxial2Hspectra(inputFID,FH,ppm_axis)
+% showAxial2Hspectra displays the axial 2H spectra.
+%
+% Inputs:
+%   - inputFID: The input FID data. It should be a 4D array.
+%   - FH: The frequency index.
+%   - ppm_axis: The ppm axis values.
 
+% Example:
+%   inputFID = rand(100, 10, 10, 2);
+%   FH = 1;
+%   ppm_axis = linspace(-10, 10, 100);
+%   showAxial2Hspectra(inputFID, FH, ppm_axis)
+%
 if ~isequal(size(inputFID,1),numel(ppm_axis))
     inputFID=padarray(inputFID,[(numel(ppm_axis)-size(inputFID,1)) 0 0 0],0,'post');
 end

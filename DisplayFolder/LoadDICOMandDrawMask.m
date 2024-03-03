@@ -1,4 +1,38 @@
 function DCM_Mask=LoadDICOMandDrawMask(Dataset)
+% LoadDICOMandDrawMask - Loads a DICOM dataset and allows the user to draw a region of interest (ROI) on the axial anatomical image.
+%
+% Syntax: 
+%   DCM_Mask = LoadDICOMandDrawMask(Dataset)
+%
+% Inputs:
+%   Dataset - A structure containing DICOM data.
+%
+% Outputs:
+%   DCM_Mask - A structure containing the loaded DICOM image, DICOM tag information, and the drawn ROI mask.
+%
+% Example:
+%   dataset = load('dicom_data.mat');
+%   DCM_Mask = LoadDICOMandDrawMask(dataset);
+%
+%   In the GUI that opens, the user can draw an ROI on the axial anatomical image by clicking and dragging the mouse. The drawn ROI is stored in the 'DCM_Mask' structure.
+%
+%   To access the drawn ROI mask, use 'DCM_Mask.DrawnROImask'.
+%
+%   To access the DICOM image, use 'DCM_Mask.AxialImage'.
+%
+%   To access the DICOM tag information, use 'DCM_Mask.AxialDicomTagInfo'.
+%
+%   To close the GUI, click the 'Close' button.
+%
+% Notes:
+%   - This function requires the Image Processing Toolbox.
+%   - The DICOM dataset must be in the same format as the 'Dataset' structure.
+%   - The DICOM dataset should contain at least one field with a name starting with 'Dyn'.
+%   - The DICOM dataset should not contain any noise data.
+%   - The function uses a GUI to display the axial anatomical image and allow the user to draw an ROI.
+%   - The function uses sliders and checkboxes to control the behavior of the GUI.
+%   - The drawn ROI is stored as a binary mask in the 'DCM_Mask.DrawnROImask' field.
+
 fns = fieldnames(Dataset);
 for k=1:size(fns,1)
     if ~isequal(strfind(fns{k},'Dyn'),1)

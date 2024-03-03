@@ -1,4 +1,31 @@
 function showCoronal2Hspectra(inputFID,AP,ppm_axis)
+% showCoronal2Hspectra displays coronal 2D spectra.
+%
+% Inputs:
+%   - inputFID: 4D array of input FID data
+%   - AP: Index of the AP (anterior-posterior) dimension
+%   - ppm_axis: Vector of chemical shift values
+%
+% Output:
+%   - None
+%
+% Example:
+%   showCoronal2Hspectra(inputFID, 2, ppm_axis)
+%
+% Note:
+%   - The function pads the inputFID array if its size does not match the
+%     number of elements in ppm_axis.
+%   - The function plots the real part of the 2D spectra.
+%   - The function creates a figure with subplots for each spectrum.
+%   - The x-axis represents the chemical shift values (ppm_axis).
+%   - The y-axis represents the real part of the spectra.
+%   - The color of the spectra is green.
+%   - The background color of the subplots is black.
+%   - The x-axis is reversed.
+%   - The tick labels and tick marks are hidden.
+%   - The x-axis limits are set to [0 10].
+%   - The y-axis limits are determined based on the maximum and minimum
+%     values of the spectra.
 
 if ~isequal(size(inputFID,1),numel(ppm_axis))
     inputFID=padarray(inputFID,[(numel(ppm_axis)-size(inputFID,1)) 0 0 0],0,'post');

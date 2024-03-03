@@ -1,5 +1,14 @@
 function outputdata=NoiseCovarianceGeneration(rawdata)
-% Read FID data and generate noise covariance matrix
+% This function generates the noise covariance matrix from the raw data.
+% The raw data is read from the specified file path and processed to create
+% the noise covariance matrix.
+
+% Input:
+%   - rawdata: The file path of the raw data file.
+
+% Output:
+%   - outputdata: A struct containing the processed data and noise covariance matrix.
+
 currentfolder=cd;
 outputdata.datapath=strcat(currentfolder,'\',rawdata);
 [outputdata.data, outputdata.list]=csi_loadData(outputdata.datapath);
