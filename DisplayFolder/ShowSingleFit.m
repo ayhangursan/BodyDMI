@@ -1,4 +1,22 @@
 function ShowSingleFit(inputFID,DMIResults,row,col,slice,xaxis,Parameters,Referenceloc)
+% ShowSingleFit - Display the single fit results.
+%
+% Syntax: ShowSingleFit(inputFID, DMIResults, row, col, slice, xaxis, Parameters, Referenceloc)
+%
+% Inputs:
+%   - inputFID: The input FID data.
+%   - DMIResults: The DMI results.
+%   - row: The row index.
+%   - col: The column index.
+%   - slice: The slice index.
+%   - xaxis: The x-axis data.
+%   - Parameters: The parameters.
+%   - Referenceloc: The reference location.
+%
+% Outputs: None
+%
+% Example:
+%   ShowSingleFit(inputFID, DMIResults, 1, 1, 1, xaxis, Parameters, Referenceloc)
 
 fitResults=DMIResults{row,col,slice};
 time=Parameters.time+Parameters.TE;

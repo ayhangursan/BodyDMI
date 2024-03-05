@@ -1,3 +1,33 @@
+% Hammingfilterpostcorrection - Apply Hamming filter correction at post-processing.
+%
+% Syntax:
+%   [idealhammingwindow, Correctionmask, filteredCSI] = Hammingfilterpostcorrection(fiddata, acqpattern, Parameters)
+%
+%   - fiddata: The input FID data.
+%   - acqpattern: The acquisition pattern.
+%   - Parameters: A structure containing various parameters.
+%
+% Outputs:
+%   - idealhammingwindow: The ideal Hamming window.
+%   - Correctionmask: The correction mask.
+%   - filteredCSI: The filtered CSI data.
+%
+% Description:
+%   This function applies Hamming filter correction at post-processing to the input FID data.
+%   It calculates the ideal Hamming window based on the grid size and applies it to the FID data.
+%   The correction mask is calculated by dividing the ideal Hamming window by the acquisition pattern.
+%   If there are non-acquired k-space points in the dataset, the correction mask is set to zero for those points.
+%   Finally, the filtered CSI data is obtained by multiplying the FID data with the correction mask.
+%
+% Example:
+%   % Define the input parameters
+%   fiddata = rand(32, 32, 32, 8);
+%   acqpattern = ones(32, 32, 32);
+%   Parameters.CSIdims = [32, 32, 32];
+%
+%   % Apply Hamming filter correction
+%   [idealhammingwindow, Correctionmask, filteredCSI] = Hammingfilterpostcorrection(fiddata, acqpattern, Parameters);
+
 function [idealhammingwindow,Correctionmask,filteredCSI]=Hammingfilterpostcorrection(fiddata,acqpattern,Parameters)
 
 filteredCSI=zeros(size(fiddata));

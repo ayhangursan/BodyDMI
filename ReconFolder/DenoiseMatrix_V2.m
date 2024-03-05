@@ -1,7 +1,28 @@
 function OutMatrix=DenoiseMatrix_V2(InpMatrix)
-%% Debug
-% InpMatrix=noisepatch;
-% InpMatrix=signalpatch;
+% DenoiseMatrix_V2 - Denoises a given matrix using singular value decomposition (SVD).
+%
+% Syntax:
+%   OutMatrix = DenoiseMatrix_V2(InpMatrix)
+%
+% Input Arguments:
+%   - InpMatrix: The input matrix to be denoised.
+%
+% Output Arguments:
+%   - OutMatrix: The denoised matrix.
+%
+% Description:
+%   The `DenoiseMatrix_V2` function applies denoising to a given matrix using singular value decomposition (SVD).
+%   It computes the SVD of the input matrix and determines the optimal cutoff point for denoising based on the singular values.
+%   The denoised matrix is then reconstructed using the selected singular values.
+%
+%   Note: This function includes a faster implementation of SVD, `svdecon`, which may produce slightly different results compared to the built-in `svd` function in MATLAB.
+%
+% Example:
+%   % Create a random matrix
+%   A = rand(100, 100);
+%
+%   % Denoise the matrix
+%   B = DenoiseMatrix_V2(A);
 %
 n=size(InpMatrix,1);
 m=size(InpMatrix,2);
