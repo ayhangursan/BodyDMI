@@ -53,18 +53,14 @@ for k=1:NumDynamics
         options.Referencemap=Dataset.Dyn1.RoemerSens_map;disp('First dynamic is used as baseline/Coil reference scan.')
         figure('Name','Coil array sensitivity map','WindowState','maximized')
         imagescn(abs(permute(squeeze(options.Referencemap(:,:,:,round(size(options.Referencemap,4)/2))),[2 3 1])))
-        options=setDMIoptions(NumChannel, options);
-        if ~isequal(numel(options.UsedCh),NumChannel)
-            tempReferencemap = zeros(size(options.Referencemap));
-            tempReferencemap(options.UsedCh,:) = options.Referencemap(options.UsedCh,:);
-            options.Referencemap = tempReferencemap;
-            clear tempReferencemap
+        options=setDMIoptions(NumChannel, Dataset.Dyn1.options);
+        if ~isequal(options.UsedCh,Dataset.Dyn1.options.UsedCh) % Check if the channels are same, if not recon again
             eval(['Dataset.Dyn',num2str(k),'=BodyDMIRecon(''',DatasetDynName{k,1},''',options);'])
             options.Referencemap=Dataset.Dyn1.RoemerSens_map;disp('First dynamic is used as baseline/Coil reference scan.')
-            figure('Name','Coil array sensitivity map(Discarded coils are set to zero)','WindowState','maximized')
+            figure('Name','Coil array sensitivity map(Virtual channels shown. Discarded coils are set to zero)','WindowState','maximized')
             imagescn(abs(permute(squeeze(options.Referencemap(:,:,:,round(size(options.Referencemap,4)/2))),[2 3 1])))
             disp('The channels used in reconstruction have changed.')
-        elseif~isequal(numel(options.VoxelShift),Dataset.Dyn1.options.VoxelShift)
+        elseif~isequal(options.VoxelShift,Dataset.Dyn1.options.VoxelShift)
             eval(['Dataset.Dyn',num2str(k),'=BodyDMIRecon(''',DatasetDynName{k,1},''',options);'])
             disp('Voxel shift change is applied.')
         else
@@ -88,21 +84,23 @@ if nargin < 2
     opt.NoiseCov=0; % Default Noisecovariance
     opt.ReferenceLocation=0; % Default water reference signal location
     opt.Referencemap=0; % Default Roemer reference map. Zero inut generate map from the data itself.
+    opt.VoxelShift=[-1 0 0];
+    opt.UsedCh=[1:NumChannel].';
 end
 if NumChannel == 1
     prompt = {'Echo time(ms):','Acquisition bandwidth(Hz):', 'Apply Voxel shift (AP RL FH)'};
     dlgtitle = 'BodyDMI - Acquisition parameter options';
     fieldsize = [1 90; 1 90; 1 90];
-    definput = {'1.38','2750', '-1 0 0'};
+    definput = {num2str(opt.TE),num2str(opt.BW),num2str(opt.VoxelShift)};
     answers= inputdlg(prompt,dlgtitle,fieldsize,definput);
     opt.TE=str2double(answers{1});
     opt.BW=str2double(answers{2});
     opt.VoxelShift=str2num(answers{3});
 else
-    prompt = {'Echo time(ms):','Acquisition bandwidth(Hz):','Channels to be use in Recon', 'Apply Voxel shift (AP RL FH)'};
+    prompt = {'Echo time(ms):','Acquisition bandwidth(Hz):','Channels to be use in Recon (leave double space)', 'Apply Voxel shift (AP RL FH)'};
     dlgtitle = 'BodyDMI - Acquisition and Reconstruction parameter options';
     fieldsize = [1 90; 1 90; 1 90; 1 90];
-    definput = {'1.38','2750', num2str(1:NumChannel), '-1 0 0'};
+    definput = {num2str(opt.TE),num2str(opt.BW),num2str(opt.UsedCh.'),num2str(opt.VoxelShift)};
     answers= inputdlg(prompt,dlgtitle,fieldsize,definput);
     opt.TE=str2double(answers{1});
     opt.BW=str2double(answers{2});
