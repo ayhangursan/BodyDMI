@@ -92,12 +92,12 @@ end
 if NumChannel == 1
     prompt = {'Echo time(ms):','Acquisition bandwidth(Hz):', 'Apply Voxel shift (AP RL FH)'};
     dlgtitle = 'BodyDMI - Acquisition parameter options';
-    fieldsize = [1 90; 1 90];
+    fieldsize = [1 90; 1 90; 1 90];
     definput = {'1.38','2750', '-1 0 0'};
     answers= inputdlg(prompt,dlgtitle,fieldsize,definput);
     opt.TE=str2double(answers{1});
     opt.BW=str2double(answers{2});
-    opt.VoxelShift=str2double(extract(answers{4}, digitsPattern));
+    opt.VoxelShift=str2num(answers{3});
 else
     prompt = {'Echo time(ms):','Acquisition bandwidth(Hz):','Channels to be use in Recon', 'Apply Voxel shift (AP RL FH)'};
     dlgtitle = 'BodyDMI - Acquisition and Reconstruction parameter options';
