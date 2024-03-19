@@ -96,7 +96,7 @@ if NumChannel == 1
     opt.TE=str2double(answers{1});
     opt.BW=str2double(answers{2});
     opt.VoxelShift=str2num(answers{3});
-else
+elseif NumChannel>1
     prompt = {'Echo time(ms):','Acquisition bandwidth(Hz):','Channels to be use in Recon (leave double space)', 'Apply Voxel shift (AP RL FH)'};
     dlgtitle = 'BodyDMI - Acquisition and Reconstruction parameter options';
     fieldsize = [1 90; 1 90; 1 90; 1 90];
@@ -106,5 +106,8 @@ else
     opt.BW=str2double(answers{2});
     opt.UsedCh=str2double(extract(answers{3}, digitsPattern));
     opt.VoxelShift=str2num(answers{4});
+    opt.Referencemap=0; % Default Roemer reference map. Zero inut generate map from the data itself.
+else
+    disp("Given number of channels are not a valid number.")
 end
 end

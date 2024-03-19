@@ -124,7 +124,7 @@ if ~isempty(dataset.Param.Index.channelIndex)
     dataset.avgrawdata=flip(dataset.avgrawdata,3);disp('Fliped in AP')
     dataset.avgrawdata=flip(dataset.avgrawdata,4);disp('Fliped in RL')
     dataset.fftfiddata=zeros(size(dataset.avgrawdata));
-    for n=options.UsedCh
+    for n=options.UsedCh.'
         dataset.fftfiddata(:,n,:,:,:)=circshift(PhaseSpectra(SpatialFFT(squeeze(dataset.avgrawdata(:,n,:,:,:))),dataset.Param),[0 options.VoxelShift]);
     end
     disp(['Applied voxel shift(AP RL FH) = ',num2str(options.VoxelShift)])
