@@ -50,22 +50,8 @@ cd(DatasetDynName{1,2})
 for k=1:NumDynamics
     eval(['Dataset.Dyn',num2str(k),'=BodyDMIRecon(''',DatasetDynName{k,1},''',options);'])
     if k==1 && NumChannel>1
-        options.Referencemap=Dataset.Dyn1.RoemerSens_map;disp('First dynamic is used as baseline/Coil reference scan.')
         figure('Name','Coil array sensitivity map','WindowState','maximized')
-        imagescn(abs(permute(squeeze(options.Referencemap(:,:,:,round(size(options.Referencemap,4)/2))),[2 3 1])))
-        options=setDMIoptions(NumChannel, Dataset.Dyn1.options);
-        if ~isequal(options.UsedCh,Dataset.Dyn1.options.UsedCh) % Check if the channels are same, if not recon again
-            eval(['Dataset.Dyn',num2str(k),'=BodyDMIRecon(''',DatasetDynName{k,1},''',options);'])
-            options.Referencemap=Dataset.Dyn1.RoemerSens_map;disp('First dynamic is used as baseline/Coil reference scan.')
-            figure('Name','Coil array sensitivity map(Virtual channels shown. Discarded coils are set to zero)','WindowState','maximized')
-            imagescn(abs(permute(squeeze(options.Referencemap(:,:,:,round(size(options.Referencemap,4)/2))),[2 3 1])))
-            disp('The channels used in reconstruction have changed.')
-        elseif~isequal(options.VoxelShift,Dataset.Dyn1.options.VoxelShift)
-            eval(['Dataset.Dyn',num2str(k),'=BodyDMIRecon(''',DatasetDynName{k,1},''',options);'])
-            disp('Voxel shift change is applied.')
-        else
-            disp('No changes were made in channel selection.')
-        end
+        imagescn(abs(permute(squeeze(Dataset.Dyn1.RoemerSens_map(:,:,:,round(size(Dataset.Dyn1.RoemerSens_map,4)/2))),[2 3 1])))
     end
 end
 clear k;
