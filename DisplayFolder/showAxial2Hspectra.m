@@ -23,8 +23,8 @@ zlimitwindow=find(ppm_axis>0 & ppm_axis<10);% For 2H
 
 specmin=1.2*min(real(SPECTRA(zlimitwindow,:,:)),[],'all');
 
-% specmax=2e2;disp(['Y window is set manually. Max:',num2str(specmax)]) % Modify this line in case predefined ylimits are needed!
-% specmin=-1e2;disp(['Y window is set manually. Min:',num2str(specmin)])
+% specmax=2e2;disp(['Vertical window is set manually. Max:',num2str(specmax)]) % Modify this line in case predefined ylimits are needed!
+% specmin=-1e2;disp(['Vertical window is set manually. Min:',num2str(specmin)])
 
 nkx=size(SPECTRA,2);
 nky=size(SPECTRA,3);

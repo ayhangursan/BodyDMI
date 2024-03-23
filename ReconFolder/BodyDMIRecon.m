@@ -27,12 +27,6 @@ dataset.NoiseCov=options.NoiseCov;
 currentfolder=cd;
 dataset.datapath=strcat(currentfolder,'\',rawdata);
 [dataset.data, dataset.list]=csi_loadData(dataset.datapath);
-
-if ~isequal(size(dataset.data.noise,2),size(dataset.NoiseCov,1))
-    dataset.NoiseCov=cov(dataset.data.noise)./max(abs(cov(dataset.data.noise)),[],'all');
-    disp('Number of channels in seperate noise data does not match with number of channels in MRSI data. Using noise samples coming withMRSI data.')
-end
-
 %% Parameters
 dataset.Param.gyromagneticratio=6.53569*10^6;
 dataset.Param.Tesla=7;
@@ -120,11 +114,13 @@ end
 % dataset.spectradata=zeros(size(dataset.avgrawdata)); % Save memory
 if ~isempty(dataset.Param.Index.channelIndex)
     dataset.avgrawdata=permute(dataset.avgrawdata,[1 2 4 3 5])*1e3;disp('Signal rescaled with 1e3, fix amount!')
+    dataset.avgrawdata=dataset.avgrawdata(:,options.UsedCh(:),:,:,:);disp('Removed excluded channels, if any.')
+    dataset.Param.dims(2)=numel(options.UsedCh);
     dataset.Param.CSIdims=[dataset.Param.dims(dataset.Param.Index.kyIndex) dataset.Param.dims(dataset.Param.Index.kxIndex) dataset.Param.dims(dataset.Param.Index.kzIndex)];
     dataset.avgrawdata=flip(dataset.avgrawdata,3);disp('Fliped in AP')
     dataset.avgrawdata=flip(dataset.avgrawdata,4);disp('Fliped in RL')
     dataset.fftfiddata=zeros(size(dataset.avgrawdata));
-    for n=options.UsedCh.'
+    for n=1:size(dataset.avgrawdata,dataset.Param.Index.channelIndex)
         dataset.fftfiddata(:,n,:,:,:)=circshift(PhaseSpectra(SpatialFFT(squeeze(dataset.avgrawdata(:,n,:,:,:))),dataset.Param),[0 options.VoxelShift]);
     end
     disp(['Applied voxel shift(AP RL FH) = ',num2str(options.VoxelShift)])
