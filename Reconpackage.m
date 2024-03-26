@@ -34,7 +34,6 @@ if NumChannel>1
     Dataset.Noise=NoiseCovarianceGeneration(DatasetNoiseName);
     Dataset.Noise.NoiseCov=Dataset.Noise.noisecovariance;
     Dataset.Noise.NoiseCov=Dataset.Noise.NoiseCov./max(abs(Dataset.Noise.NoiseCov),[],'all');% Normalize noise covariance matrix
-    options.NoiseCov= Dataset.Noise.NoiseCov(options.UsedCh,options.UsedCh);
     clear DatasetNoiseName DatasetNoisepath Dataset.Noise
 elseif NumChannel==1
     disp('Single channel dataset')

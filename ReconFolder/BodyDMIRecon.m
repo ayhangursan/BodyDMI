@@ -27,6 +27,10 @@ dataset.NoiseCov=options.NoiseCov;
 currentfolder=cd;
 dataset.datapath=strcat(currentfolder,'\',rawdata);
 [dataset.data, dataset.list]=csi_loadData(dataset.datapath);
+if ~isequal(size(dataset.data.noise,2),size(dataset.NoiseCov,1))
+    dataset.NoiseCov=cov(dataset.data.noise)./max(abs(cov(dataset.data.noise)),[],'all');
+    disp('Number of channels in seperate noise data does not match with number of channels in MRSI data. Using noise samples coming withMRSI data.')
+end
 %% Parameters
 dataset.Param.gyromagneticratio=6.53569*10^6;
 dataset.Param.Tesla=7;
@@ -114,8 +118,6 @@ end
 % dataset.spectradata=zeros(size(dataset.avgrawdata)); % Save memory
 if ~isempty(dataset.Param.Index.channelIndex)
     dataset.avgrawdata=permute(dataset.avgrawdata,[1 2 4 3 5])*1e3;disp('Signal rescaled with 1e3, fix amount!')
-    dataset.avgrawdata=dataset.avgrawdata(:,options.UsedCh(:),:,:,:);disp('Removed excluded channels, if any.')
-    dataset.Param.dims(2)=numel(options.UsedCh);
     dataset.Param.CSIdims=[dataset.Param.dims(dataset.Param.Index.kyIndex) dataset.Param.dims(dataset.Param.Index.kxIndex) dataset.Param.dims(dataset.Param.Index.kzIndex)];
     dataset.avgrawdata=flip(dataset.avgrawdata,3);disp('Fliped in AP')
     dataset.avgrawdata=flip(dataset.avgrawdata,4);disp('Fliped in RL')
@@ -147,6 +149,12 @@ if ~isempty(dataset.Param.Index.channelIndex) % if multichannel dataset
     disp('Automatic phasing applied.')
     % Channel combination
     [dataset.RoemerComb, dataset.RoemerSens_map]=RoemerEqualNoise_withmap_input(dataset.PhasedFID,options.Referencemap,diag(ones(dataset.Param.dims(dataset.Param.Index.channelIndex),1)),dataset.Param.Index.channelIndex);        disp('Roemer equeal noise channel combination applied.')
+    if ~isequal(numel(options.UsedCh),dataset.Param.dims(2))
+        options.Referencemap=zeros(size(dataset.RoemerSens_map));
+        options.Referencemap(options.UsedCh(:),:,:,:)=dataset.RoemerSens_map(options.UsedCh(:),:,:,:);
+        [dataset.RoemerComb, dataset.RoemerSens_map]=RoemerEqualNoise_withmap_input(dataset.PhasedFID,options.Referencemap,diag(ones(dataset.Param.dims(dataset.Param.Index.channelIndex),1)),dataset.Param.Index.channelIndex);
+
+    end
     dataset.RoemerComb=PhaseSpectra(dataset.RoemerComb,dataset.Param); % Phase combined data
 %     dataset.Combspectra=fftshift(fft(PhaseSpectra(dataset.RoemerComb,dataset.Param),[],1),1).*dataset.Param.FirstOrdPhaseFunct; % Phase and apply spectral FFT Roemer
     dataset.RoemerCombDN=PCA_CSIdenoising_V2_KM(dataset.RoemerComb,5,dataset.Param); % First combined and then denoised.

@@ -6,6 +6,10 @@ AMARESoptions=setAMARESoptions;
 PriorKnowledge='PK_2H_7T_LiverDMI_lorentzian'; % Change to manual selection with GUI later!
 
 eval(['fns = fieldnames(',DatasetName,');'])
+if isequal(string(cellstr(fns{1})),'Noise')
+    fns(1)=[];
+end
+
 filename = [DatasetName,'.xlsx'];
 filenameNormalized = [DatasetName,'_Normalized.xlsx'];
 ALF = 'A':'Z';
